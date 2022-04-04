@@ -2,8 +2,11 @@ package com.santander.banco811.repository;
 
 import com.santander.banco811.model.Conta;
 import com.santander.banco811.model.TipoConta;
+import com.santander.banco811.projection.ContaView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -36,13 +39,13 @@ public interface ContaRepository extends JpaRepository<Conta, Integer> {
             @Param("saldo") BigDecimal saldo
     );
 
-    @Query(value = "select * from conta c" +
-            "where (c.tipo_conta = :tipoConta AND" +
-            "c.data_criacao >= :dataCriacao)" +
-            "OR c.saldo = :saldo ", nativeQuery = true)
-    List<Conta> findByDataCriacaoAndTipoContaOrSaldo(
-            @Param("dataCriacao") LocalDateTime dataCriacao,
-            @Param("tipoConta") LocalDateTime tipoConta,
-            @Param("saldo") BigDecimal saldo
-            );
+    @Query("select c from Conta c " +
+            "where c.tipoConta = :tipoConta and c.usuario.nome = :nome")
+    List<Conta> findByTipoContaAndUsuarioName(
+            @Param("tipoConta") TipoConta tipoConta,
+            @Param("nome") String nome
+    );
+
+
+    List<ContaView> findAllByTipoConta(TipoConta tipoConta);
 }

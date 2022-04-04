@@ -41,7 +41,6 @@ public class Usuario {
 
     @Column(name = "data_atualizacao")
     @LastModifiedDate
-    @UpdateTimestamp
     private LocalDateTime dataAtualizacao;
 
     @JsonIgnore

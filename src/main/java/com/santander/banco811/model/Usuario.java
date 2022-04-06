@@ -32,6 +32,9 @@ public class Usuario {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "login")
+    private String login;
+
     @Column(name = "data_criacao")
     @CreatedDate
     private LocalDateTime dataCriacao;
@@ -47,9 +50,9 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Conta> contas;
 
-    public Usuario(UsuarioRequest usuarioRequest) {
+    public Usuario(UsuarioRequest usuarioRequest, String encryptedPassword) {
         this.cpf = usuarioRequest.getCpf();
         this.nome = usuarioRequest.getNome();
-        this.senha = usuarioRequest.getSenha();
+        this.senha = encryptedPassword;
     }
 }

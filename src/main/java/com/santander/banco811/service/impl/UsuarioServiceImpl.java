@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Page<Usuario> getAll(String nome, int page, int size) {
@@ -70,7 +74,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioResponse create(UsuarioRequest usuarioRequest) {
-        Usuario usuario = new Usuario(usuarioRequest);
+        var passwordEncrypted = passwordEncoder.encode(usuarioRequest.getSenha());
+
+        Usuario usuario = new Usuario(usuarioRequest, passwordEncrypted);
         usuario = usuarioRepository.save(usuario);
 
         return new UsuarioResponse(usuario);

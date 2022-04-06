@@ -1,22 +1,22 @@
 package com.santander.banco811.service.impl;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.santander.banco811.dto.UsuarioRequest;
 import com.santander.banco811.dto.UsuarioResponse;
-import com.santander.banco811.model.TipoConta;
 import com.santander.banco811.model.Usuario;
-import com.santander.banco811.repository.ContaRepository;
 import com.santander.banco811.repository.UsuarioRepository;
 import com.santander.banco811.service.UsuarioService;
-import org.hibernate.annotations.NotFound;
+import com.santander.banco811.specification.UsuarioSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -41,7 +41,23 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Page<UsuarioResponse> getAllByCpf(String cpf, int page, int size) {
+    public List<Usuario> search(String search) {
+        UsuarioSpecificationBuilder builder = new UsuarioSpecificationBuilder();
+
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+
+        Specification<Usuario> spec = builder.build();
+
+        return usuarioRepository.findAll(spec);
+    }
+
+    @Override
+    public List<UsuarioResponse> getAllByCpf(String cpf, int page, int size) {
         PageRequest pageRequest = PageRequest.of(
                 page,
                 size,

@@ -1,12 +1,11 @@
 package com.santander.banco811.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.santander.banco811.dto.UsuarioRequest;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,7 +16,8 @@ import java.util.List;
 
 @Table(name = "usuario")
 @Entity
-@Getter  @Setter
+@Getter @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Usuario {
@@ -26,11 +26,8 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "cpf", nullable = false, unique = true)
+    @Column(name = "cpf")
     private String cpf;
-
-    @Column(name = "senha")
-    private String senha;
 
     @Column(name = "nome")
     private String nome;
@@ -43,8 +40,11 @@ public class Usuario {
     @LastModifiedDate
     private LocalDateTime dataAtualizacao;
 
+    @Column(name = "senha")
+    private String senha;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario")
     private List<Conta> contas;
 
     public Usuario(UsuarioRequest usuarioRequest) {

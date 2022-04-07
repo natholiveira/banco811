@@ -1,6 +1,7 @@
 package com.santander.banco811.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.santander.banco811.dto.UsuarioRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class Usuario {
     @Column(name = "nome")
     private String nome;
 
+    @JsonProperty("username")
     @Column(name = "login")
     private String login;
 
@@ -43,6 +45,7 @@ public class Usuario {
     @LastModifiedDate
     private LocalDateTime dataAtualizacao;
 
+    @JsonProperty("password")
     @Column(name = "senha")
     private String senha;
 
@@ -54,5 +57,6 @@ public class Usuario {
         this.cpf = usuarioRequest.getCpf();
         this.nome = usuarioRequest.getNome();
         this.senha = encryptedPassword;
+        this.login = usuarioRequest.getLogin();
     }
 }

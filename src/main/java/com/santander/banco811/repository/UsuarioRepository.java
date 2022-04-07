@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>,
@@ -22,4 +23,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>,
     @Query("select new com.santander.banco811.dto.UsuarioResponse(u.id, u.cpf, u.nome, u.dataCriacao, u.dataAtualizacao) from Usuario u " +
             "where u.cpf = :cpf")
     List<UsuarioResponse> findByCpf(@Param("cpf") String cpf, Pageable pageable);
+
+    Optional<Usuario> findByLogin(String login);
 }
